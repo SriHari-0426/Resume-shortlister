@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Job Details - Resume Shortlisting{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card-glass p-5 scroll-animate">
+                <div class="mb-4">
+                    <a href="{{ url_for('candidate_jobs') }}" class="text-primary text-decoration-none">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Jobs
+                    </a>
+                </div>
+                
+                <h2 class="mb-2">{{ job.title }}</h2>
+                <p class="text-secondary mb-4">Posted by {{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</p>
+                
+                <div class="mb-4">
+                    <h5 class="mb-3">About This Role</h5>
+                    <p>{{ job.description }}</p>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Experience</small>
+                        <p class="fw-bold">{{ job.required_experience or 0 }} years</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Location</small>
+                        <p class="fw-bold">{{ job.location or 'Remote' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Employment Type</small>
+                        <p class="fw-bold">{{ job.employment_type }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Salary</small>
+                        <p class="fw-bold">{{ job.salary_range or 'Competitive' }}</p>
+                    </div>
+                </div>
+                
+                {% if job.required_skills %}
+                <div class="mb-4">
+                    <h5 class="mb-3">Required Skills</h5>
+                    <div>
+                        {% for skill in job.required_skills %}
+                            <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if job.nice_to_have_skills %}
+                <div class="mb-4">
+                    <h5 class="mb-3">Nice to Have</h5>
+                    <div>
+                        {% for skill in job.nice_to_have_skills %}
+                            <span class="skill-tag" style="opacity: 0.7;">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-4 scroll-animate">
+            <div class="card-glass p-4 mb-4">
+                <h6 class="mb-3">Your Match Score</h6>
+                
+                {% if matches %}
+                    {% set best_match = matches|selectattr('match')|map(attribute='match')|list|first %}
+                    {% if best_match %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>Overall Match</small>
+                                <strong>{{ (best_match.match_score * 100)|int }}%</strong>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ (best_match.match_score * 100)|int }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="mb-2">
+                            <small class="text-secondary">Skills: {{ (best_match.skills_match * 100)|int }}%</small>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-secondary">Experience: {{ (best_match.experience_match * 100)|int }}%</small>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-secondary">Education: {{ (best_match.education_match * 100)|int }}%</small>
+                        </div>
+                    {% else %}
+                        <p class="text-secondary">Upload a resume to see your match score</p>
+                    {% endif %}
+                {% else %}
+                    <p class="text-secondary">Upload a resume to see your match score</p>
+                {% endif %}
+            </div>
+            
+            <div class="card-glass p-4">
+                <h6 class="mb-3">Your Resumes</h6>
+                {% if matches %}
+                    <ul class="list-unstyled">
+                        {% for item in matches %}
+                            <li class="mb-2">
+                                <a href="{{ url_for('view_resume', resume_id=item.resume.id) }}" class="text-primary text-decoration-none">
+                                    {{ item.resume.filename }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-secondary small">No resumes uploaded</p>
+                    <a href="{{ url_for('upload_resume') }}" class="btn btn-gradient btn-sm w-100">
+                        Upload Resume
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

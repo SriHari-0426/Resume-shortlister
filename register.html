@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Resume Shortlisting{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card-glass p-5 fade-in-up">
+                <div class="text-center mb-4">
+                    <i class="fas fa-star fa-3x glow-icon mb-3" style="color: var(--accent);"></i>
+                    <h3 class="gradient-text mb-1">Create Account</h3>
+                    <p class="text-secondary">Join our recruitment platform</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('register') }}" novalidate>
+                    <!-- Role Selection -->
+                    <div class="mb-3">
+                        <label class="form-label">I am a:</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="role" id="role_candidate" value="candidate" checked>
+                            <label class="btn btn-outline-primary w-50" for="role_candidate">
+                                <i class="fas fa-user me-2"></i> Candidate
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="role" id="role_recruiter" value="recruiter">
+                            <label class="btn btn-outline-primary w-50" for="role_recruiter">
+                                <i class="fas fa-briefcase me-2"></i> Recruiter
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- First Name -->
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name">
+                    </div>
+                    
+                    <!-- Last Name -->
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name">
+                    </div>
+                    
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <small class="form-text d-block mt-2">
+                            <i class="fas fa-check me-1" style="color: var(--success);"></i> At least 8 characters
+                        </small>
+                    </div>
+                    
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    
+                    <!-- Terms -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label text-secondary small" for="terms">
+                            I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-gradient w-100 py-2 mb-3">
+                        <i class="fas fa-rocket me-2"></i> Create Account
+                    </button>
+                </form>
+                
+                <!-- Divider -->
+                <div class="text-center text-secondary mb-3">
+                    <small>Already have an account?</small>
+                </div>
+                
+                <!-- Login Link -->
+                <a href="{{ url_for('login') }}" class="btn btn-outline-gradient w-100 py-2">
+                    <i class="fas fa-sign-in-alt me-2"></i> Sign In Instead
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    main {
+        flex: 1;
+    }
+    
+    footer {
+        margin-top: auto;
+    }
+</style>
+{% endblock %}

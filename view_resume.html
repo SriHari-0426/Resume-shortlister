@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}View Resume - Resume Shortlisting{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-2">
+                <i class="fas fa-file-pdf me-2" style="color: var(--primary);"></i>
+                <span class="gradient-text">Resume Details</span>
+            </h1>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{{ url_for('candidate_dashboard') }}" class="btn btn-outline-gradient">
+                <i class="fas fa-arrow-left me-2"></i> Back
+            </a>
+        </div>
+    </div>
+    
+    <div class="row scroll-animate">
+        <!-- Main Content -->
+        <div class="col-lg-8 mb-4">
+            <div class="card-glass p-5 mb-4">
+                <h4 class="mb-4 gradient-text">Contact Information</h4>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Name</small>
+                        <p class="fw-bold mb-3">{{ resume.candidate_name or 'Not found' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Email</small>
+                        <p class="fw-bold mb-3">{{ resume.email or 'Not found' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Phone</small>
+                        <p class="fw-bold mb-3">{{ resume.phone or 'Not found' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-secondary">Location</small>
+                        <p class="fw-bold mb-0">{{ resume.location or 'Not found' }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Skills -->
+            {% if resume.skills %}
+            <div class="card-glass p-5 mb-4">
+                <h5 class="mb-4 gradient-text">Technical Skills</h5>
+                <div>
+                    {% for skill in resume.skills %}
+                        <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Experience -->
+            {% if resume.experience %}
+            <div class="card-glass p-5 mb-4">
+                <h5 class="mb-4 gradient-text">Work Experience</h5>
+                {% for exp in resume.experience %}
+                    <div class="mb-4 pb-4" style="border-bottom: 1px solid rgba(148, 163, 184, 0.2);">
+                        <h6 class="fw-bold">{{ exp.title or 'Position' }}</h6>
+                        <p class="text-secondary mb-2">
+                            {% if exp.company %}<strong>{{ exp.company }}</strong>{% endif %}
+                            {% if exp.duration %}<small class="ms-2">{{ exp.duration }}</small>{% endif %}
+                        </p>
+                        {% if exp.description %}<p class="mb-0 text-secondary">{{ exp.description[:200] }}</p>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Education -->
+            {% if resume.education %}
+            <div class="card-glass p-5 mb-4">
+                <h5 class="mb-4 gradient-text">Education</h5>
+                {% for edu in resume.education %}
+                    <div class="mb-3">
+                        <h6 class="fw-bold">
+                            {% if edu.degree %}{{ edu.degree }}{% endif %}
+                            {% if edu.field %} in {{ edu.field }}{% endif %}
+                        </h6>
+                        {% if edu.year %}<small class="text-secondary">{{ edu.year }}</small>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Parse Status -->
+            <div class="card-glass p-4 mb-4">
+                <h6 class="mb-3">Parsing Status</h6>
+                {% if resume.is_parsed %}
+                    <div class="alert alert-success mb-0">
+                        <i class="fas fa-check-circle me-2"></i> Successfully Parsed
+                    </div>
+                {% else %}
+                    {% if resume.parse_error %}
+                        <div class="alert alert-warning mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ resume.parse_error }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-hourglass-half me-2"></i> Processing
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            <!-- File Info -->
+            <div class="card-glass p-4 mb-4">
+                <h6 class="mb-3">File Information</h6>
+                <small class="text-secondary d-block">
+                    <strong>Format:</strong> {{ resume.file_type.upper() }}
+                </small>
+                <small class="text-secondary d-block">
+                    <strong>Uploaded:</strong> {{ resume.created_at.strftime('%Y-%m-%d') }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

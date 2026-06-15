@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume - Resume Shortlisting{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card-glass p-5 scroll-animate">
+                <h2 class="mb-4">
+                    <i class="fas fa-cloud-upload-alt me-2 glow-icon"></i>
+                    <span class="gradient-text">Upload Your Resume</span>
+                </h2>
+                
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_resume') }}">
+                    <!-- File Upload Area -->
+                    <div class="mb-4">
+                        <div class="upload-area p-5 text-center border-2 rounded-3" style="border: 2px dashed rgba(79, 70, 229, 0.5); cursor: pointer; transition: all 0.3s ease;" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-file-import fa-3x mb-3" style="color: var(--primary);"></i>
+                            <h5 class="mb-2">Drag and drop your resume</h5>
+                            <p class="text-secondary mb-0">or <span class="text-primary fw-bold">click to browse</span></p>
+                            <small class="text-secondary d-block mt-2">Supported formats: PDF, DOCX (Max 50MB)</small>
+                        </div>
+                        
+                        <input type="file" id="fileInput" name="file" accept=".pdf,.docx,.doc" required style="display: none;">
+                        <div id="fileName" class="mt-3 text-success fw-bold"></div>
+                    </div>
+                    
+                    <!-- File Info -->
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Pro Tip:</strong> Ensure your resume includes:
+                        <ul class="mb-0 mt-2">
+                            <li>Contact information (name, email, phone)</li>
+                            <li>Work experience with dates</li>
+                            <li>Technical skills and certifications</li>
+                            <li>Education details</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Buttons -->
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-gradient flex-grow-1 py-2">
+                            <i class="fas fa-upload me-2"></i> Upload Resume
+                        </button>
+                        <a href="{{ url_for('candidate_dashboard') }}" class="btn btn-outline-gradient py-2">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Drag and drop functionality
+const uploadArea = document.querySelector('.upload-area');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.background = 'rgba(79, 70, 229, 0.1)';
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.background = '';
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.background = '';
+    fileInput.files = e.dataTransfer.files;
+    updateFileName();
+});
+
+fileInput.addEventListener('change', updateFileName);
+
+function updateFileName() {
+    const fileName = fileInput.files[0]?.name;
+    if (fileName) {
+        document.getElementById('fileName').textContent = `✓ ${fileName} selected`;
+    }
+}
+</script>
+{% endblock %}
